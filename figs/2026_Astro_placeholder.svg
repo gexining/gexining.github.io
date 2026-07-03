@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="100" viewBox="0 0 180 100">
+  <rect width="180" height="100" fill="#101828"/>
+  <circle cx="36" cy="28" r="2" fill="#fff"/>
+  <circle cx="72" cy="40" r="1.8" fill="#fff"/>
+  <circle cx="132" cy="26" r="2.2" fill="#fff"/>
+  <circle cx="150" cy="55" r="1.7" fill="#fff"/>
+  <circle cx="52" cy="62" r="1.5" fill="#fff"/>
+  <text x="90" y="52" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#f6f6f6">Astronomical Imaging</text>
+  <text x="90" y="72" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#c9d1d9">Replace with figure</text>
+</svg>

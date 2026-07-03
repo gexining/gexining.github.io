@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420">
+  <rect width="420" height="420" fill="#f4f4f4"/>
+  <rect x="1" y="1" width="418" height="418" fill="none" stroke="#d0d0d0"/>
+  <circle cx="210" cy="145" r="66" fill="#d8d8d8"/>
+  <path d="M96 336c16-72 70-108 114-108s98 36 114 108" fill="#d8d8d8"/>
+  <text x="210" y="388" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="#777">Replace photo</text>
+</svg>
