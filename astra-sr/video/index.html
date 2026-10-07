@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASTRA-SR | Research Film</title>
+<meta name="description" content="ASTRA-SR: blind astronomical restoration from a single observed frame. A 72-second research film by Xining Ge, Ziteng Cui and Shuhong Liu.">
+<meta name="theme-color" content="#12141c">
+<link rel="canonical" href="https://gexining.github.io/astra-sr/video/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ASTRA-SR — Recover the detail.">
+<meta property="og:description" content="Blind astronomical restoration from a single observed frame. Watch the 72-second research film.">
+<meta property="og:url" content="https://gexining.github.io/astra-sr/video/">
+<meta property="og:image" content="https://gexining.github.io/astra-sr/video/cover.png">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ASTRA-SR — Recover the detail.">
+<meta name="twitter:image" content="https://gexining.github.io/astra-sr/video/cover.png">
+<style>
+:root{color-scheme:dark;--paper:#12141c;--ink:#eeedf3;--accent:#c3b5e8;--muted:#abb1c0;--line:#373847}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,"Microsoft YaHei",sans-serif}
+main{max-width:1360px;margin:auto;padding:34px 30px 50px}header{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}h1{font-size:clamp(30px,4vw,50px);font-weight:650;line-height:1.2;margin:4px 0 12px}p{margin:0;color:var(--muted);font-size:14px}.version{font-size:12px;letter-spacing:.12em;color:var(--accent)}
+video{display:block;width:100%;aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line);border-radius:4px}.chapters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}button,a{font:inherit}button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:3px;padding:8px 12px;cursor:pointer;font-size:13px}button:hover{border-color:var(--accent);color:var(--accent)}.tools{display:flex;flex-wrap:wrap;gap:22px;align-items:center;margin-top:23px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}label{cursor:pointer}.time{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);white-space:nowrap}.credit{margin-top:20px;font-size:12px;line-height:1.8}a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media(max-width:600px){main{padding:22px 16px}header{display:block}.time{display:block;margin-top:12px}}
+</style>
+<link rel="stylesheet" href="player.css?v=20261008-2">
+</head>
+<body>
+<main>
+ <header><div><div class="version">ASTRA-SR / RESEARCH FILM</div><h1>从观测中，找回细节。</h1><p>72 秒 · 60 fps · 最高 1080p · 单帧天文图像盲复原</p></div><span class="time" id="time">00:00 / 01:12</span></header>
+ <section class="player" id="player" aria-label="ASTRA-SR 视频播放器">
+  <div class="screen">
+   <video id="film" controls playsinline preload="auto" tabindex="0" aria-label="ASTRA-SR 研究视频" poster="cover.png" src="media/astra-sr-v6-720p60-web.mp4">你的浏览器不支持内嵌视频，可以<a href="media/astra-sr-v6.mp4">直接打开 MP4</a>。</video>
+   <span id="play-status" class="play-status" role="status" aria-live="polite" hidden></span>
+  </div>
+  <div class="player-controls" id="player-controls" hidden>
+   <div class="seek-row"><input id="seek" type="range" min="0" max="72" step="0.01" value="0" aria-label="视频进度" aria-valuetext="00:00 / 01:12"></div>
+   <div class="control-row">
+    <button id="play" type="button" aria-label="播放视频">播放</button>
+    <button id="back" type="button" aria-label="后退 5 秒">−5s</button>
+    <button id="forward" type="button" aria-label="前进 5 秒">+5s</button>
+    <span class="time" id="elapsed">00:00 / 01:12</span>
+    <label class="quality-label">画质 <select id="quality" aria-label="视频画质"><option value="720">流畅 720p · 60帧</option><option value="1080">高清 1080p · 60帧</option></select></label>
+    <button id="mute" type="button" aria-pressed="false" aria-label="静音">静音</button>
+    <button id="fullscreen" type="button">全屏</button>
+   </div>
+  </div>
+ </section>
+ <p class="keyboard-hint">A / ← 后退 5 秒 · D / → 前进 5 秒 · 空格播放 / 暂停 · 拖动进度条后松开即可跳转</p>
+ <nav class="chapters" aria-label="视频章节">
+  <button data-t="0">00:00 封面</button><button data-t="6">00:06 相位曲面</button><button data-t="15">00:15 退化过程</button><button data-t="23">00:23 论文 PSF</button><button data-t="34">00:34 方法动画</button><button data-t="49">00:49 实验结果</button><button data-t="59">00:59 图像对比</button><button data-t="68">01:08 作者与资源</button>
+ </nav>
+ <div class="tools"><a href="../">项目网页</a><a href="https://github.com/gexining/ASTRA-SR">代码仓库</a><a href="https://huggingface.co/datasets/xiningning/astrasr_data">数据集与权重</a><a href="/">Xining Ge · 个人主页</a><a href="media/astra-sr-v6.mp4" download>下载原版 1080p 视频</a><a href="media/astra-sr-v6-silent.mp4" download>下载无配乐视频</a><a href="cover.png" target="_blank" rel="noopener">查看封面</a><a href="https://arxiv.org/abs/2609.26731v1" target="_blank" rel="noopener">论文 ↗</a></div>
+ <p class="credit">音乐：<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600022" target="_blank" rel="noopener">Inspired — Kevin MacLeod (incompetech.com)</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>。节选并调整音量、淡入淡出。发布时请保留<a href="music-credits.txt">音乐署名</a>。</p>
+</main>
+<script src="player.js?v=20261008-2" defer></script>
+</body>
+</html>

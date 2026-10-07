@@ -10,6 +10,9 @@
   <meta property="og:description" content="Blind single-frame restoration + 2x super-resolution under six-layer atmospheric turbulence — code, checkpoint, and benchmark released.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gexining.github.io/astra-sr/">
+  <meta property="og:url" content="https://gexining.github.io/astra-sr/">
+  <meta property="og:image" content="https://gexining.github.io/astra-sr/video/cover.png">
   <link rel="stylesheet" href="site.css?v=astra-1">
 </head>
 <body>
@@ -53,6 +56,7 @@
         <a class="resource" href="https://github.com/gexining/ASTRA-SR"><svg class="icon"><use href="#i-code"/></svg>Code</a>
         <a class="resource" href="https://huggingface.co/datasets/xiningning/astrasr_data"><svg class="icon"><use href="#i-data"/></svg>Dataset</a>
         <a class="resource" href="https://huggingface.co/datasets/xiningning/astrasr_data/tree/main/checkpoints"><svg class="icon"><use href="#i-weights"/></svg>Checkpoint</a>
+        <a class="resource" href="video/?v=20261008-3" aria-label="Watch the 72-second research film">&#9654; Video</a>
         <a class="resource" href="#citation"><svg class="icon"><use href="#i-quote"/></svg>BibTeX</a>
       </div>
     </div>
@@ -65,7 +69,7 @@
         <li><span class="k">Authors</span><span class="v"><span>Xining Ge</span><span>Ziteng Cui</span><span>Shuhong Liu</span></span></li>
         <li><span class="k">Venue</span><span class="v">ICASSP 2027 <em>under review</em></span></li>
         <li><span class="k">Data</span><span class="v">Cassini ISS RAW &times; MASS turbulence <em>NASA / JPL-Caltech / SSI</em></span></li>
-        <li><span class="k">Result</span><span class="v">35.824&nbsp;dB PSNR <em>+0.256 over strongest baseline</em></span></li>
+        <li><span class="k">Result</span><span class="v">35.824&nbsp;dB PSNR <em>+0.487 dB foreground PSNR over best baseline</em></span></li>
         <li><span class="k">License</span><span class="v">MIT code &middot; CC BY 4.0 data</span></li>
       </ul>
     </div>
@@ -84,7 +88,7 @@
           <div class="knob" aria-hidden="true">&lt;&gt;</div>
           <input type="range" min="0" max="100" value="50" aria-label="Compare degraded input with ASTRA-SR output (Jupiter)">
         </div>
-        <figcaption>Jupiter &mdash; banded planet, real Cassini ISS observation degraded with the frozen turbulence protocol.</figcaption>
+        <figcaption>Jupiter &mdash; real ground-based observation from Singapore. No clean reference target is available.</figcaption>
       </figure>
       <figure class="teaser-fig">
         <div class="compare" data-compare>
@@ -95,7 +99,7 @@
           <div class="knob" aria-hidden="true">&lt;&gt;</div>
           <input type="range" min="0" max="100" value="50" aria-label="Compare degraded input with ASTRA-SR output (Moon)">
         </div>
-        <figcaption>Moon &mdash; cratered terrain; single 256&times;256 frame in, clean 512&times;512 frame out.</figcaption>
+        <figcaption>Moon &mdash; real lunar observation around Tycho. No clean reference target is available.</figcaption>
       </figure>
     </div>
     <div class="teaser-under">
@@ -107,24 +111,27 @@
   <section id="abstract" class="text-section">
     <h2 data-num="00" class="sec">Abstract</h2>
     <p class="opening-quote">Spatially varying optical blur and measurement noise obscure astronomical structure, while naive super-resolution can amplify the very artifacts it was meant to remove.</p>
-    <p>ASTRA-SR is an asymmetric spatial-frequency network for single-channel restoration and twofold super-resolution. A simulated blur-only intermediate target connects an early signal-purification stage to a later detail-reconstruction stage: the network first learns what noise looks like when the blur is removed, then rebuilds spatial detail. The architecture combines half-scale band adaptation (A2BAND), spatial reconstruction over a multiscale SCGN backbone, and local Fourier refinement, followed by sequential spatial and amplitude residuals in the R1-SF upsampling head.</p>
+    <p>ASTRA-SR is an asymmetric spatial-frequency network for single-channel restoration and twofold super-resolution. A simulated blur-only intermediate target connects an early signal-purification stage to a later detail-reconstruction stage: the network first estimates a noise-suppressed image that retains optical blur, then rebuilds spatial detail. The architecture combines half-scale band adaptation (A2BAND), spatial reconstruction over a multiscale SCGN backbone, and local Fourier refinement, followed by sequential spatial and amplitude residuals in the R1-SF upsampling head.</p>
     <p>Training and evaluation follow a frozen, physics-based protocol: clean sources curated from NASA/ESA Cassini ISS RAW observations are degraded with turbulence strengths sampled at six altitudes <span class="math">{0.5, 1, 2, 4, 8, 16}&nbsp;km</span> from real MASS observation records, propagated through moving phase screens into spatially varying PSF fields, plus Gaussian sensor noise. On 1,355 validation images the released control model reaches <strong>35.824&nbsp;dB PSNR</strong>, <strong>0.849&nbsp;SSIM</strong> and <strong>32.148&nbsp;dB object-PSNR</strong> &mdash; above the strongest baseline &mdash; while matched ablations show small or metric-dependent component gains, which we report as measured rather than rounded up. Inference is fully blind: one degraded image in, one restored image out.</p>
   </section>
 
   <section class="wide results-section" id="results">
     <div class="section-heading">
       <h2 class="sec" data-num="01">Results</h2>
-      <a class="quiet-link" href="https://github.com/gexining/ASTRA-SR/tree/main/docs/evidence">Full evaluation evidence <span aria-hidden="true">&#8599;</span></a>
+      <a class="quiet-link" href="https://github.com/gexining/ASTRA-SR/blob/main/docs/RELEASE_SCOPE.md">Protocol and release notes <span aria-hidden="true">&#8599;</span></a>
     </div>
-    <p class="section-intro">1,355 validation images, single seed, fixed epoch-20 selection &mdash; the exact protocol and hashes ship with the repository.</p>
+    <p class="section-intro">Reported paper Table&nbsp;1 results on 1,355 paired synthetic images, single seed, fixed epoch-20 selection. The released experiment calls this split <code>val</code>; the preprint labels the same-sized set as test. The separate released test split contains 1,356 images.</p>
     <div class="metrics-wrap">
       <div class="table-scroll">
       <table class="metric-table">
         <thead><tr><th>Method</th><th>PSNR &#8593;</th><th>SSIM &#8593;</th><th>Obj-PSNR &#8593;</th></tr></thead>
         <tbody>
-          <tr><td>StarIR (TPAMI&rsquo;26), strongest baseline</td><td>35.568</td><td>0.844</td><td>31.553</td></tr>
+          <tr><td>NAFNet (ECCV&rsquo;22)</td><td>35.275</td><td>0.843</td><td>31.434</td></tr>
+          <tr><td>RDBM (CVPR&rsquo;26)</td><td>34.618</td><td>0.844</td><td>31.661</td></tr>
+          <tr><td>SCGN (CVPR&rsquo;26)</td><td>35.138</td><td>0.846</td><td>31.620</td></tr>
+          <tr><td>StarIR (TPAMI&rsquo;26)</td><td>35.218</td><td>0.844</td><td>31.553</td></tr>
           <tr class="ours"><td>ASTRA-SR (CONTROL)</td><td><strong>35.824</strong></td><td><strong>0.849</strong></td><td><strong>32.148</strong></td></tr>
-          <tr class="delta"><td>&Delta; over baseline</td><td>+0.256</td><td>+0.005</td><td>+0.595</td></tr>
+          <tr class="delta"><td>&Delta; vs. best baseline per metric</td><td>+0.549</td><td>+0.003</td><td>+0.487</td></tr>
         </tbody>
       </table>
       </div>
@@ -190,7 +197,7 @@
     <div class="dataset-grid">
       <div class="facts">
         <p>Six phase-screen layers at <strong>0.5&ndash;16&nbsp;km</strong> altitudes use turbulence records from the ESO Multi-Aperture Scintillation Sensor (MASS). Exposure-averaged, spatially varying PSF fields are built from a mean kernel plus 12 PCA basis kernels, then combined with Gaussian read noise.</p>
-        <p>Every sample ships six aligned arrays &mdash; <code>clean_hr512</code>, <code>clean_lr256</code>, <code>degraded_lr256</code>, <code>noise_map</code>, <code>noise_only</code>, <code>psf_only</code> &mdash; so the degradation intermediates can be studied or re-simulated. Splits are disjoint by source, and every archive carries a SHA-256.</p>
+        <p>Every sample ships six aligned arrays &mdash; <code>clean_hr512</code>, <code>clean_lr256</code>, <code>degraded_lr256</code>, <code>noise_map_lr256</code>, <code>noise_only_lr256</code>, <code>psf_only_lr256</code> &mdash; so the degradation intermediates can be studied or re-simulated. Splits are disjoint by <code>source_id</code>; all 134 archives are published with SHA-256 checksums.</p>
         <div class="split-inline" aria-label="Dataset splits">
           <div class="split-chip"><b>63,582<em>train</em></b>57,860 real + 5,722 png</div>
           <div class="split-chip"><b>1,355<em>val</em></b>paper Table&nbsp;1 reported here</div>
@@ -271,7 +278,7 @@
 
 <footer class="page-footer text-section">
   <p>Clean sources are curated NASA/ESA <a href="https://pds-rings.seti.org/cassini/iss/">Cassini ISS</a> RAW observations &mdash; courtesy of NASA / JPL-Caltech / Space Science Institute; please credit the original archive when reusing them. Code is released under MIT, the dataset under CC&nbsp;BY&nbsp;4.0.</p>
-  <p>ASTRA-SR repository<span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://github.com/gexining/ASTRA-SR">GitHub</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://huggingface.co/datasets/xiningning/astrasr_data">Hugging Face</a></p>
+  <p><a href="video/?v=20261008-3">Research film</a><span class="footer-dot" aria-hidden="true">&middot;</span>ASTRA-SR repository<span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://github.com/gexining/ASTRA-SR">GitHub</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://huggingface.co/datasets/xiningning/astrasr_data">Hugging Face</a></p>
   <p class="small">Page structure and reading rhythm follow the <a href="https://assafshocher.github.io/escher/">Moore, Escher, Penrose</a> project page; the palette is our own night sky.</p>
 </footer>
 
@@ -301,13 +308,6 @@
     });
   }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
   document.querySelectorAll("section[id]").forEach(function (s) { secObs.observe(s); });
-
-  // ---- teaser sliders jump into the qualitative viewer ----
-  document.querySelectorAll(".compare input[type='range']").forEach(function (r) {
-    r.addEventListener("change", function () {
-      document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
 
   // ---- 3D tilt on interactive cards ----
   document.querySelectorAll(".compare").forEach(function (el) {
@@ -387,7 +387,7 @@
         qvErr.src = base + "_error.png";
         qvErr.alt = "Error map, " + QV_METHODS[m] + " vs ground truth";
       }
-      qvMeta.textContent = s.name + " · " + QV_METHODS[m] + " — " + s.kind + ", 512×512 main + 112×112 ROI crops" + (qvHasErr ? " + error map" : "");
+      qvMeta.textContent = s.name + " · " + QV_METHODS[m] + " — " + s.kind + ", 512×512 main + native ROI crops" + (qvHasErr ? " + error map" : "");
       qv.querySelectorAll("[data-scene]").forEach(function (b) {
         b.setAttribute("aria-selected", String(b.dataset.scene === qv.dataset.scene));
       });
