@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ASTRA-SR: Atmospheric Seeing and Turbulence Restoration for Astronomical Image Super-Resolution</title>
+  <meta name="description" content="A turbulence-aware restoration network for planetary/astronomical imaging, with a physics-degraded Cassini-ISS super-resolution benchmark. Xining Ge, Ziteng Cui, Shuhong Liu. ICASSP 2027 submission.">
+  <meta property="og:title" content="ASTRA-SR: Atmospheric Seeing and Turbulence Restoration">
+  <meta property="og:description" content="Blind single-frame restoration + 2x super-resolution under six-layer atmospheric turbulence — code, checkpoint, and benchmark released.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="site.css?v=astra-1">
+</head>
+<body>
+<div class="space-base" aria-hidden="true"></div>
+<div class="space-stars" aria-hidden="true"></div>
+<div class="space-stars far" aria-hidden="true"></div>
+<a class="skip-link" href="#abstract">Skip to the abstract</a>
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-paper" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16"/></symbol>
+  <symbol id="i-data" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-weights" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.4"/><path d="M12 7.4V11m0 0-6.8 9.4M12 11l6.8 9.4M5.2 20.4h13.6"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M9 6H3v7h6V6Zm12 0h-6v7h6V6ZM9 13c0 4-2 5-5 5m17-5c0 4-2 5-5 5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+</defs></svg>
+
+<nav class="project-nav" aria-label="Project navigation">
+  <div class="project-nav-inner">
+    <a class="project-nav-title" href="./"><span class="brand-note" aria-hidden="true"></span>ASTRA<b>-SR</b></a>
+    <div class="project-tabs">
+      <a href="#results">01 Results</a>
+      <a href="#method">02 Method</a>
+      <a href="#dataset">03 Dataset</a>
+      <a href="#citation">04 BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<header class="paper-header wide">
+  <div class="masthead">
+    <span class="wordmark">ASTRA<em>-SR</em></span>
+    <span class="mast-note">ICASSP 2027 submission &middot; under review</span>
+  </div>
+  <div class="title-grid">
+    <div>
+      <p class="kicker">Ground-based planetary imaging &middot; blind restoration</p>
+      <h1 style="margin-top:14px">ASTRA-SR<span>Atmospheric Seeing and Turbulence Restoration for Astronomical Image Super-Resolution</span></h1>
+      <p class="lede">One degraded 256&times;256 frame goes in; a clean 512&times;512 frame comes out. A simulated blur-only midpoint teaches the network to purify before it rebuilds. Inference is fully blind &mdash; no PSF, no noise map, no side information.</p>
+      <div class="resource-links">
+        <a class="resource" href="https://arxiv.org/abs/2609.26731"><svg class="icon"><use href="#i-paper"/></svg>Paper</a>
+        <a class="resource" href="https://github.com/gexining/ASTRA-SR"><svg class="icon"><use href="#i-code"/></svg>Code</a>
+        <a class="resource" href="https://huggingface.co/datasets/xiningning/astrasr_data"><svg class="icon"><use href="#i-data"/></svg>Dataset</a>
+        <a class="resource" href="https://huggingface.co/datasets/xiningning/astrasr_data/tree/main/checkpoints"><svg class="icon"><use href="#i-weights"/></svg>Checkpoint</a>
+        <a class="resource" href="#citation"><svg class="icon"><use href="#i-quote"/></svg>BibTeX</a>
+      </div>
+    </div>
+    <div class="right-col">
+      <figure class="cover-side">
+        <img src="assets/jupiter_cassini_portrait.jpg" alt="Saturn in natural colors with its rings, photographed by the Cassini spacecraft.">
+        <figcaption>Saturn in natural colors &times; Cassini ISS (PIA21098)</figcaption>
+      </figure>
+      <ul class="meta-rows">
+        <li><span class="k">Authors</span><span class="v"><span>Xining Ge</span><span>Ziteng Cui</span><span>Shuhong Liu</span></span></li>
+        <li><span class="k">Venue</span><span class="v">ICASSP 2027 <em>under review</em></span></li>
+        <li><span class="k">Data</span><span class="v">Cassini ISS RAW &times; MASS turbulence <em>NASA / JPL-Caltech / SSI</em></span></li>
+        <li><span class="k">Result</span><span class="v">35.824&nbsp;dB PSNR <em>+0.256 over strongest baseline</em></span></li>
+        <li><span class="k">License</span><span class="v">MIT code &middot; CC BY 4.0 data</span></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="teaser wide" aria-label="Before and after teaser">
+    <div class="teaser-grid">
+      <figure class="teaser-fig">
+        <div class="compare" data-compare>
+          <img src="assets/teaser_jupiter_astra-sr.png" alt="ASTRA-SR restoration of a degraded Jupiter frame">
+          <div class="before-clip"><img src="assets/teaser_jupiter_input.png" alt="" aria-hidden="true"></div>
+          <span class="tag left">degraded input</span><span class="tag right">ASTRA-SR</span>
+          <div class="gutter" aria-hidden="true"></div>
+          <div class="knob" aria-hidden="true">&lt;&gt;</div>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare degraded input with ASTRA-SR output (Jupiter)">
+        </div>
+        <figcaption>Jupiter &mdash; banded planet, real Cassini ISS observation degraded with the frozen turbulence protocol.</figcaption>
+      </figure>
+      <figure class="teaser-fig">
+        <div class="compare" data-compare>
+          <img src="assets/teaser_moon_astra-sr.png" alt="ASTRA-SR restoration of a degraded lunar frame">
+          <div class="before-clip"><img src="assets/teaser_moon_input.png" alt="" aria-hidden="true"></div>
+          <span class="tag left">degraded input</span><span class="tag right">ASTRA-SR</span>
+          <div class="gutter" aria-hidden="true"></div>
+          <div class="knob" aria-hidden="true">&lt;&gt;</div>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare degraded input with ASTRA-SR output (Moon)">
+        </div>
+        <figcaption>Moon &mdash; cratered terrain; single 256&times;256 frame in, clean 512&times;512 frame out.</figcaption>
+      </figure>
+    </div>
+    <div class="teaser-under">
+      <p><strong>Drag to compare.</strong> One degraded low-resolution frame enters the network; a single blind pass returns a clean frame at twice the resolution &mdash; no ground-truth PSF, no noise map, no side information.</p>
+      <button id="teaser-reset" type="button">Reset both views</button>
+    </div>
+  </section>
+
+  <section id="abstract" class="text-section">
+    <h2 data-num="00" class="sec">Abstract</h2>
+    <p class="opening-quote">Spatially varying optical blur and measurement noise obscure astronomical structure, while naive super-resolution can amplify the very artifacts it was meant to remove.</p>
+    <p>ASTRA-SR is an asymmetric spatial-frequency network for single-channel restoration and twofold super-resolution. A simulated blur-only intermediate target connects an early signal-purification stage to a later detail-reconstruction stage: the network first learns what noise looks like when the blur is removed, then rebuilds spatial detail. The architecture combines half-scale band adaptation (A2BAND), spatial reconstruction over a multiscale SCGN backbone, and local Fourier refinement, followed by sequential spatial and amplitude residuals in the R1-SF upsampling head.</p>
+    <p>Training and evaluation follow a frozen, physics-based protocol: clean sources curated from NASA/ESA Cassini ISS RAW observations are degraded with turbulence strengths sampled at six altitudes <span class="math">{0.5, 1, 2, 4, 8, 16}&nbsp;km</span> from real MASS observation records, propagated through moving phase screens into spatially varying PSF fields, plus Gaussian sensor noise. On 1,355 validation images the released control model reaches <strong>35.824&nbsp;dB PSNR</strong>, <strong>0.849&nbsp;SSIM</strong> and <strong>32.148&nbsp;dB object-PSNR</strong> &mdash; above the strongest baseline &mdash; while matched ablations show small or metric-dependent component gains, which we report as measured rather than rounded up. Inference is fully blind: one degraded image in, one restored image out.</p>
+  </section>
+
+  <section class="wide results-section" id="results">
+    <div class="section-heading">
+      <h2 class="sec" data-num="01">Results</h2>
+      <a class="quiet-link" href="https://github.com/gexining/ASTRA-SR/tree/main/docs/evidence">Full evaluation evidence <span aria-hidden="true">&#8599;</span></a>
+    </div>
+    <p class="section-intro">1,355 validation images, single seed, fixed epoch-20 selection &mdash; the exact protocol and hashes ship with the repository.</p>
+    <div class="metrics-wrap">
+      <div class="table-scroll">
+      <table class="metric-table">
+        <thead><tr><th>Method</th><th>PSNR &#8593;</th><th>SSIM &#8593;</th><th>Obj-PSNR &#8593;</th></tr></thead>
+        <tbody>
+          <tr><td>StarIR (TPAMI&rsquo;26), strongest baseline</td><td>35.568</td><td>0.844</td><td>31.553</td></tr>
+          <tr class="ours"><td>ASTRA-SR (CONTROL)</td><td><strong>35.824</strong></td><td><strong>0.849</strong></td><td><strong>32.148</strong></td></tr>
+          <tr class="delta"><td>&Delta; over baseline</td><td>+0.256</td><td>+0.005</td><td>+0.595</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="qual-viewer" id="qual-viewer" data-scene="target_01_banded_planet" data-method="ours">
+      <div class="qv-tabs-row">
+        <span class="qv-label">Scene</span>
+        <div class="qv-tabs" role="tablist" aria-label="Scene">
+          <button class="qv-tab" data-scene="target_01_banded_planet">Banded planet</button>
+          <button class="qv-tab" data-scene="target_02_ringed_planet">Ringed planet</button>
+          <button class="qv-tab" data-scene="target_03_spiral_galaxy">Spiral galaxy</button>
+          <button class="qv-tab" data-scene="planet_jupiter_singapore">Real Jupiter</button>
+          <button class="qv-tab" data-scene="planet_moon_tycho">Real Moon (Tycho)</button>
+        </div>
+      </div>
+      <div class="qv-tabs-row">
+        <span class="qv-label">Method</span>
+        <div class="qv-tabs" role="tablist" aria-label="Method">
+          <button class="qv-tab" data-method="input">Input</button>
+          <button class="qv-tab" data-method="starir">StarIR</button>
+          <button class="qv-tab ours" data-method="ours">ASTRA-SR (ours)</button>
+        </div>
+      </div>
+      <div class="qv-stage">
+        <div class="scene-main qv-main">
+          <img id="qv-img" src="" alt="">
+          <span class="roi teal" id="qv-roi1"></span>
+          <span class="roi purple" id="qv-roi2"></span>
+        </div>
+        <div class="qv-side">
+          <figure class="qv-zoom"><img id="qv-zoom1" src="" alt=""><figcaption>ROI 1</figcaption></figure>
+          <figure class="qv-zoom"><img id="qv-zoom2" src="" alt=""><figcaption>ROI 2</figcaption></figure>
+          <figure class="qv-zoom" id="qv-err-wrap"><img id="qv-err" src="" alt=""><figcaption>Error &times;4</figcaption></figure>
+        </div>
+      </div>
+      <p class="qv-meta" id="qv-meta"></p>
+      <p class="scene-cap">Compact viewer built from the paper&rsquo;s original per-target assets (arXiv Fig.&nbsp;4 sources, 512&times;512 mains + native ROI crops). Teal/purple boxes match the ROIs used across all methods. Real Jupiter and Moon have no reference &mdash; these are genuine frames, not synthetic pairs.</p>
+    </div>
+  </section>
+
+  <section class="method-section" id="method">
+    <div class="text-section">
+      <h2 class="sec" data-num="02">Method</h2>
+      <p><strong>Purify first, then rebuild the detail.</strong> The network is asymmetric by design: an early stage at the original scale removes sensor noise, a midpoint block learns a blur-only intermediate image, and a later stage rebuilds structure across scales before the head upsamples with separate spatial and amplitude residuals.</p>
+    </div>
+    <figure class="wide method-figure">
+      <img src="assets/paper_fig1_architecture.png" width="1500" height="546" loading="lazy" alt="ASTRA-SR architecture (arXiv Fig. 1): the synthesis path generates the degraded LR input and training-only targets; the restoration path contains the three-scale SCGN backbone, intermediate LR estimation branch, stage-specific refinement, and sequential spatial-amplitude HR head.">
+      <figcaption>Architecture (arXiv Fig.&nbsp;1, paper original). The synthesis path produces the degraded input and training-only targets; the restoration path is blind at inference. Widths and skips are frozen in <code>configs/CONTROL.json</code>.</figcaption>
+    </figure>
+    <ol class="method-steps wide">
+      <li><span class="step-number">01</span><h3>Purify the signal</h3><p>A single signal-aware A2BAND adaptation at the stem works at half scale, stripping sensor noise before fine structure is touched.</p></li>
+      <li><span class="step-number">02</span><h3>Supervise the middle</h3><p>A simulated blur-only target anchors the midpoint representation, so deblurring and detail reconstruction are learned in sequence rather than entangled.</p></li>
+      <li><span class="step-number">03</span><h3>Refine spectra, then upsample</h3><p>Patch-Fourier refinement plus sequential spatial and amplitude residuals in the R1-SF head rebuild the 512&times;512 frame with amplitude-aware gains bounded by design.</p></li>
+    </ol>
+  </section>
+
+  <section class="wide dataset-section" id="dataset">
+    <div class="section-heading">
+      <h2 class="sec" data-num="03">Dataset</h2>
+      <a class="quiet-link" href="https://huggingface.co/datasets/xiningning/astrasr_data">Open the dataset card <span aria-hidden="true">&#8599;</span></a>
+    </div>
+    <p class="section-intro">A benchmark built from real sky: 400k collected Cassini ISS RAW frames curated into ~20k clean sources, degraded with real MASS turbulence statistics.</p>
+    <div class="dataset-grid">
+      <div class="facts">
+        <p>Six phase-screen layers at <strong>0.5&ndash;16&nbsp;km</strong> altitudes use turbulence records from the ESO Multi-Aperture Scintillation Sensor (MASS). Exposure-averaged, spatially varying PSF fields are built from a mean kernel plus 12 PCA basis kernels, then combined with Gaussian read noise.</p>
+        <p>Every sample ships six aligned arrays &mdash; <code>clean_hr512</code>, <code>clean_lr256</code>, <code>degraded_lr256</code>, <code>noise_map</code>, <code>noise_only</code>, <code>psf_only</code> &mdash; so the degradation intermediates can be studied or re-simulated. Splits are disjoint by source, and every archive carries a SHA-256.</p>
+        <div class="split-inline" aria-label="Dataset splits">
+          <div class="split-chip"><b>63,582<em>train</em></b>57,860 real + 5,722 png</div>
+          <div class="split-chip"><b>1,355<em>val</em></b>paper Table&nbsp;1 reported here</div>
+          <div class="split-chip"><b>1,356<em>test</em></b>held out</div>
+        </div>
+      </div>
+      <div class="psf-block" role="group" aria-label="PSF kernels at three field positions, two sampling scales">
+        <div class="psf-row">
+          <span class="psf-rlab">33&times;33</span>
+          <figure class="psf-tile"><img src="assets/psf_coarse_A.png" loading="lazy" alt="33x33 downsampled PSF at field position A"></figure>
+          <figure class="psf-tile"><img src="assets/psf_coarse_B.png" loading="lazy" alt="33x33 downsampled PSF at field position B"></figure>
+          <figure class="psf-tile"><img src="assets/psf_coarse_C.png" loading="lazy" alt="33x33 downsampled PSF at field position C"></figure>
+        </div>
+        <div class="psf-row">
+          <span class="psf-rlab">132&times;132</span>
+          <figure class="psf-tile"><img src="assets/psf_fine_A.png" loading="lazy" alt="132x132 fine-sampled PSF at field position A"></figure>
+          <figure class="psf-tile"><img src="assets/psf_fine_B.png" loading="lazy" alt="132x132 fine-sampled PSF at field position B"></figure>
+          <figure class="psf-tile"><img src="assets/psf_fine_C.png" loading="lazy" alt="132x132 fine-sampled PSF at field position C"></figure>
+        </div>
+        <div class="psf-clabs"><span class="ph"></span><span>A</span><span>B</span><span>C</span></div>
+        <p class="psf-cap">PSF kernels at field positions A / B / C, 33&times;33 (sensor bins) and fine-sampled 132&times;132 &mdash; cropped cell-by-cell from the paper figure (arXiv Fig.&nbsp;2).</p>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="wide ablation-section" id="ablation">
+    <div class="section-heading">
+      <h2 class="sec" data-num="01&middot;5">Ablations</h2>
+      <a class="quiet-link" href="https://arxiv.org/abs/2609.26731">arXiv Tab.&nbsp;2 <span aria-hidden="true">&#8599;</span></a>
+    </div>
+    <p class="section-intro">Matched module-removal ablations, trained from scratch for 20 epochs under the same optimization settings. &Delta; is computed from unrounded PSNR values.</p>
+    <div class="ablation-two-col">
+      <div class="ablation-table-wrap">
+      <div class="table-scroll">
+        <table class="metric-table ablation-table">
+          <thead><tr><th>Dimension</th><th>Variant</th><th>PSNR &#8593;</th><th>&Delta; (dB)</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>Full model</td><td>ASTRA-SR full model</td><td><strong>35.824</strong></td><td>&ndash;</td></tr>
+            <tr><td rowspan="2">LR estimation</td><td>w/o frequency-band adapter</td><td>35.734</td><td>0.090</td></tr>
+            <tr><td>w/o intermediate LR supervision</td><td>35.719</td><td>0.105</td></tr>
+            <tr><td rowspan="3">LR restoration</td><td>w/o dilated branches</td><td>35.713</td><td>0.112</td></tr>
+            <tr><td>w/o Patch-Fourier refiner</td><td>35.739</td><td>0.085</td></tr>
+            <tr><td>w/o local residual gain</td><td>35.733</td><td>0.091</td></tr>
+            <tr><td rowspan="3">HR reconstruction</td><td>w/o spatial branch</td><td>35.742</td><td>0.082</td></tr>
+            <tr><td>w/o amplitude branch</td><td>35.411</td><td>0.413</td></tr>
+            <tr><td>w/o both branches</td><td>34.940</td><td>0.885</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="abl-cap">arXiv Tab.&nbsp;2, transcribed cell by cell &mdash; the amplitude branch carries the largest single-module drop (&Delta;&nbsp;=&nbsp;0.413&nbsp;dB); removing both HR branches loses 0.885&nbsp;dB.</p>
+      </div>
+      <figure class="abl-fig">
+        <img src="assets/jupiter_full_portrait.jpg" loading="lazy" alt="Full-portrait Jupiter with the Great Red Spot, photographed by the Cassini spacecraft on its flypast to Saturn.">
+        <figcaption>Jupiter, Cassini flypast portrait (PIA04866) &mdash; the planetary-imaging family this benchmark is built from.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="citation" class="text-section citation-section">
+    <div class="section-heading">
+      <h2 class="sec" data-num="04">BibTeX</h2>
+      <button class="copy-button" id="copy-bib" type="button"><svg class="icon"><use href="#i-copy"/></svg><span>Copy</span></button>
+    </div>
+    <pre><code id="bibtex">@misc{ge2026astra,
+  title         = {ASTRA-SR: Atmospheric Seeing and Turbulence Restoration
+                   for Astronomical Image Super-Resolution},
+  author        = {Ge, Xining and Cui, Ziteng and Liu, Shuhong},
+  year          = {2026},
+  eprint        = {2609.26731},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2609.26731}
+}</code></pre>
+    <p id="copy-status" role="status" class="sr-only"></p>
+  </section>
+</main>
+
+<footer class="page-footer text-section">
+  <p>Clean sources are curated NASA/ESA <a href="https://pds-rings.seti.org/cassini/iss/">Cassini ISS</a> RAW observations &mdash; courtesy of NASA / JPL-Caltech / Space Science Institute; please credit the original archive when reusing them. Code is released under MIT, the dataset under CC&nbsp;BY&nbsp;4.0.</p>
+  <p>ASTRA-SR repository<span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://github.com/gexining/ASTRA-SR">GitHub</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://huggingface.co/datasets/xiningning/astrasr_data">Hugging Face</a></p>
+  <p class="small">Page structure and reading rhythm follow the <a href="https://assafshocher.github.io/escher/">Moore, Escher, Penrose</a> project page; the palette is our own night sky.</p>
+</footer>
+
+<script>
+(function () {
+  // ---- cursor spotlight across the page ----
+  document.body.insertAdjacentHTML("afterbegin", '<div class="spotlight" aria-hidden="true"></div>');
+  var spotEl = document.querySelector(".spotlight");
+  document.addEventListener("pointermove", function (e) {
+    spotEl.style.setProperty("--mx", e.clientX + "px");
+    spotEl.style.setProperty("--my", e.clientY + "px");
+  }, { passive: true });
+
+  // ---- nav scrollspy: highlight the current section tab ----
+  var navLinks = document.querySelectorAll(".project-tabs a[href^='#']");
+  var secObs = new IntersectionObserver(function (entries) {
+    if (window.scrollY < 100) {
+      navLinks.forEach(function (a) { a.classList.remove("nav-on"); });
+      return;
+    }
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var id = "#" + e.target.id;
+      navLinks.forEach(function (a) {
+        a.classList.toggle("nav-on", a.getAttribute("href") === id);
+      });
+    });
+  }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
+  document.querySelectorAll("section[id]").forEach(function (s) { secObs.observe(s); });
+
+  // ---- teaser sliders jump into the qualitative viewer ----
+  document.querySelectorAll(".compare input[type='range']").forEach(function (r) {
+    r.addEventListener("change", function () {
+      document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  // ---- 3D tilt on interactive cards ----
+  document.querySelectorAll(".compare").forEach(function (el) {
+    el.addEventListener("pointermove", function (e) {
+      var r = el.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = "perspective(900px) rotateY(" + (x * 4.5) + "deg) rotateX(" + (-y * 4.5) + "deg) translateZ(4px)";
+    });
+    el.addEventListener("pointerleave", function () { el.style.transform = ""; });
+  });
+
+  // ---- scroll reveal: sections fade/rise in as they enter the viewport ----
+  var revealTargets = document.querySelectorAll(
+    ".sec, .metric-table, .figure-card, .scene-cell, .compare, .split-chip, .qual-viewer, .psf-tile, .method-steps li, .degrade-item, .citation-section"
+  );
+  revealTargets.forEach(function (el, i) {
+    el.classList.add("reveal");
+    el.style.transitionDelay = (i % 6) * 45 + "ms";
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add("visible");
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+  revealTargets.forEach(function (el) { io.observe(el); });
+
+  // ---- qualitative viewer: scene/method switching from original per-asset files ----
+  var QV_SCENES = {
+    "target_01_banded_planet": { name: "Banded planet", kind: "synthetic",
+      rois: [["teal", "19.53%","30.47%","21.88%","21.88%"], ["purple","53.91%","54.69%","21.88%","21.88%"]] },
+    "target_02_ringed_planet": { name: "Ringed planet", kind: "synthetic",
+      rois: [["teal","8.98%","36.72%","18.75%","18.75%"], ["purple","50.78%","18.75%","18.75%","18.75%"]] },
+    "target_03_spiral_galaxy": { name: "Spiral galaxy", kind: "synthetic",
+      rois: [["teal","40.23%","32.81%","18.75%","18.75%"], ["purple","20.31%","47.66%","18.75%","18.75%"]] },
+    "planet_jupiter_singapore": { name: "Real Jupiter", kind: "real observation",
+      rois: [["teal","38.28%","28.91%","18.75%","18.75%"], ["purple","55.86%","55.08%","18.75%","18.75%"]] },
+    "planet_moon_tycho": { name: "Real Moon (Tycho)", kind: "real observation",
+      rois: [["teal","35.16%","35.55%","21.88%","21.88%"], ["purple","64.45%","59.77%","21.88%","21.88%"]] }
+  };
+  var QV_METHODS = {
+    input:  "Input",
+    starir: "StarIR",
+    ours:   "ASTRA-SR (ours)"
+  };
+  var qv = document.getElementById("qual-viewer");
+  if (qv) {
+    var qvImg = document.getElementById("qv-img");
+    var qvZoom1 = document.getElementById("qv-zoom1");
+    var qvZoom2 = document.getElementById("qv-zoom2");
+    var qvErr = document.getElementById("qv-err");
+    var qvErrWrap = document.getElementById("qv-err-wrap");
+    var qvRoi1 = document.getElementById("qv-roi1");
+    var qvRoi2 = document.getElementById("qv-roi2");
+    var qvMeta = document.getElementById("qv-meta");
+
+    function applyRoi(el, r) {
+      el.style.left = r[1]; el.style.top = r[2];
+      el.style.width = r[3]; el.style.height = r[4];
+      el.style.borderColor = r[0] === "teal" ? "#159B90" : "#9862C5";
+    }
+    function qvRender() {
+      var s = QV_SCENES[qv.dataset.scene];
+      var m = qv.dataset.method;
+      var base = "assets/fig4/" + qv.dataset.scene + "__" + m;
+      qvImg.src = base + "_main.png";
+      qvImg.alt = s.name + " — " + QV_METHODS[m];
+      qvZoom1.src = base + "_zoom1.png";
+      qvZoom2.src = base + "_zoom2.png";
+      applyRoi(qvRoi1, s.rois[0]); applyRoi(qvRoi2, s.rois[1]);
+      var qvHasErr = s.kind === "synthetic";
+      qvErrWrap.style.display = qvHasErr ? "" : "none";
+      if (qvHasErr) {
+        qvErr.src = base + "_error.png";
+        qvErr.alt = "Error map, " + QV_METHODS[m] + " vs ground truth";
+      }
+      qvMeta.textContent = s.name + " · " + QV_METHODS[m] + " — " + s.kind + ", 512×512 main + 112×112 ROI crops" + (qvHasErr ? " + error map" : "");
+      qv.querySelectorAll("[data-scene]").forEach(function (b) {
+        b.setAttribute("aria-selected", String(b.dataset.scene === qv.dataset.scene));
+      });
+      qv.querySelectorAll("[data-method]").forEach(function (b) {
+        b.setAttribute("aria-selected", String(b.dataset.method === qv.dataset.method));
+      });
+    }
+    qv.querySelectorAll("[data-scene]").forEach(function (b) {
+      b.addEventListener("click", function () { qv.dataset.scene = b.dataset.scene; qvRender(); });
+    });
+    qv.querySelectorAll("[data-method]").forEach(function (b) {
+      b.addEventListener("click", function () { qv.dataset.method = b.dataset.method; qvRender(); });
+    });
+    qvRender();
+  }
+
+  // before/after comparison sliders
+  document.querySelectorAll('[data-compare]').forEach(function (root) {
+    var range = root.querySelector('input[type="range"]');
+    var clip = root.querySelector('.before-clip');
+    var gutter = root.querySelector('.gutter');
+    var knob = root.querySelector('.knob');
+    function apply(p) {
+      clip.style.width = p + '%';
+      gutter.style.left = p + '%';
+      knob.style.left = p + '%';
+    }
+    range.addEventListener('input', function () { apply(+range.value); });
+    apply(+range.value);
+  });
+  var resetBtn = document.getElementById('teaser-reset');
+  if (resetBtn) resetBtn.addEventListener('click', function () {
+    document.querySelectorAll('[data-compare] input[type="range"]').forEach(function (r) {
+      r.value = 50;
+      r.dispatchEvent(new Event('input'));
+    });
+  });
+
+  // copy bibtex
+  var btn = document.getElementById('copy-bib');
+  var status = document.getElementById('copy-status');
+  if (btn) btn.addEventListener('click', function () {
+    var text = document.getElementById('bibtex').innerText;
+    var done = function () {
+      btn.querySelector('span').textContent = 'Copied';
+      status.textContent = 'Citation copied to clipboard.';
+      setTimeout(function () { btn.querySelector('span').textContent = 'Copy'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { status.textContent = 'Copy failed.'; }
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>
