@@ -151,7 +151,12 @@
         <span class="qv-label">Method</span>
         <div class="qv-tabs" role="tablist" aria-label="Method">
           <button class="qv-tab" data-method="input">Input</button>
+          <button class="qv-tab" data-method="scgn">SCGN</button>
           <button class="qv-tab" data-method="starir">StarIR</button>
+          <button class="qv-tab" data-method="nafnet">NAFNet</button>
+          <button class="qv-tab" data-method="fftformer">FFTformer</button>
+          <button class="qv-tab" data-method="planet">PlaNet</button>
+          <button class="qv-tab" data-method="smfanet">SMFANet</button>
           <button class="qv-tab ours" data-method="ours">ASTRA-SR (ours)</button>
         </div>
       </div>
@@ -354,9 +359,14 @@
       rois: [["teal","35.16%","35.55%","21.88%","21.88%"], ["purple","64.45%","59.77%","21.88%","21.88%"]] }
   };
   var QV_METHODS = {
-    input:  "Input",
-    starir: "StarIR",
-    ours:   "ASTRA-SR (ours)"
+    input:     "Input",
+    scgn:      "SCGN",
+    starir:    "StarIR",
+    nafnet:    "NAFNet",
+    fftformer: "FFTformer",
+    planet:    "PlaNet",
+    smfanet:   "SMFANet",
+    ours:      "ASTRA-SR (ours)"
   };
   var qv = document.getElementById("qual-viewer");
   if (qv) {
