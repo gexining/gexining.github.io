@@ -70,7 +70,7 @@
         <li><span class="k">Venue</span><span class="v">ICASSP 2027 <em>under review</em></span></li>
         <li><span class="k">Data</span><span class="v">Cassini ISS RAW &times; MASS turbulence <em>NASA / JPL-Caltech / SSI</em></span></li>
         <li><span class="k">Result</span><span class="v">35.824&nbsp;dB PSNR <em>+0.487 dB foreground PSNR over best baseline</em></span></li>
-        <li><span class="k">License</span><span class="v">MIT code &middot; CC BY 4.0 data</span></li>
+        <li><span class="k">License</span><span class="v"><a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license">CC BY-NC 4.0</a><em> code, weights &amp; dataset &middot; noncommercial</em></span></li>
       </ul>
     </div>
   </div>
@@ -194,6 +194,7 @@
       <a class="quiet-link" href="https://huggingface.co/datasets/xiningning/astrasr_data">Open the dataset card <span aria-hidden="true">&#8599;</span></a>
     </div>
     <p class="section-intro">A benchmark built from real sky: 400k collected Cassini ISS RAW frames curated into ~20k clean sources, degraded with real MASS turbulence statistics.</p>
+    <p class="section-intro">Cassini ISS source observations: <strong>NASA / JPL-Caltech / Space Science Institute</strong>. <a href="https://science.nasa.gov/mission/cassini/">NASA Cassini mission</a> &middot; <a href="https://pds-rings.seti.org/cassini/iss/">official PDS archive</a>. Dataset and weights: <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> (noncommercial).</p>
     <div class="dataset-grid">
       <div class="facts">
         <p>Six phase-screen layers at <strong>0.5&ndash;16&nbsp;km</strong> altitudes use turbulence records from the ESO Multi-Aperture Scintillation Sensor (MASS). Exposure-averaged, spatially varying PSF fields are built from a mean kernel plus 12 PCA basis kernels, then combined with Gaussian read noise.</p>
@@ -277,7 +278,8 @@
 </main>
 
 <footer class="page-footer text-section">
-  <p>Clean sources are curated NASA/ESA <a href="https://pds-rings.seti.org/cassini/iss/">Cassini ISS</a> RAW observations &mdash; courtesy of NASA / JPL-Caltech / Space Science Institute; please credit the original archive when reusing them. Code is released under MIT, the dataset under CC&nbsp;BY&nbsp;4.0.</p>
+  <p><strong>License.</strong> The authors&rsquo; code, model weights and dataset contributions are available under <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license">CC BY-NC 4.0</a>: attribution is required and commercial use is not granted. See the <a href="LICENSE">full license</a> and <a href="LICENSE_SCOPE.md">license scope</a>. Upstream source terms and valid prior grants remain applicable.</p>
+  <p><strong>Data sources.</strong> The Cassini-derived observations originate from <a href="https://science.nasa.gov/mission/cassini/">NASA&rsquo;s Cassini mission</a>, Imaging Science Subsystem (ISS), with archive references at the <a href="https://pds-rings.seti.org/cassini/iss/">PDS Cassini ISS archive</a> and <a href="https://pds.nasa.gov/">NASA Planetary Data System</a>. Credit: <strong>NASA / JPL-Caltech / Space Science Institute</strong>. ASTRA-SR adds curation, paired resampling and simulated turbulence/noise degradation. These are processed derivatives; no NASA endorsement is implied. See <a href="DATA_SOURCES.md">data sources and acknowledgments</a> for the auxiliary-source scope and reusable credit line.</p>
   <p><a href="video/?v=20261008-3">Research film</a><span class="footer-dot" aria-hidden="true">&middot;</span>ASTRA-SR repository<span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://github.com/gexining/ASTRA-SR">GitHub</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="https://huggingface.co/datasets/xiningning/astrasr_data">Hugging Face</a></p>
   <p class="small">Page structure and reading rhythm follow the <a href="https://assafshocher.github.io/escher/">Moore, Escher, Penrose</a> project page; the palette is our own night sky.</p>
 </footer>
